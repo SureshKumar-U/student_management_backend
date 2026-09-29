@@ -1,6 +1,9 @@
-using CrudAPi.Models;
 
-namespace StudentManagement.Models;
+
+using System.Text.Json.Serialization;
+
+namespace CrudAPi.Models;
+
 
 public class Course
 {
@@ -15,8 +18,10 @@ public class Course
     public Department Department { get; set; } = null!;
 
     // Students enrolled in this course
-    public ICollection<Student> Students { get; set; }
-        = new List<Student>();
+    // Students enrolled through Enrollment
+    [JsonIgnore]
+    public ICollection<Enrollment> Enrollments { get; set; }
+        = new List<Enrollment>();
 
     // Teachers teaching this course
     public ICollection<Teacher> Teachers { get; set; }

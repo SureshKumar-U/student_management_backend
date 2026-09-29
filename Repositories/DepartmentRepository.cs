@@ -3,10 +3,11 @@
 
 
 using CrudAPi.Data;
-using CrudAPi.Dtos;
+
 using CrudAPi.Models;
 using Microsoft.EntityFrameworkCore;
 using StudentManagement.Models;
+
 
 
 
@@ -17,7 +18,7 @@ public interface IDepartmentRepository
     Task CreateDepartment(Department department);
     Task UpdateDepartment(Department department);
     Task DeleteDepartment(Department department);
-
+    Task<Department> GetDepartmentByName(string departmentName);
 
 }
 
@@ -35,6 +36,10 @@ public class DeparmentRepository:IDepartmentRepository
     {
          return await db.Departments.ToListAsync();
     }
+
+    public async Task<Department?> GetDepartmentByName(string departmentName)
+    {
+         return await db.Departments.FirstOrDefaultAsync(x => x.Name == departmentName);
 
 
     public async Task<Department?> GetDepartmentById(Guid departmentId)

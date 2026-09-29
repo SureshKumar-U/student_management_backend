@@ -1,7 +1,7 @@
 
 
+using System.Text.Json.Serialization;
 using CrudAPi.Models;
-using StudentManagement.Models;
 
 
 
@@ -10,6 +10,8 @@ public class Enrollment
     public Guid id {get;set;}
 
     public Guid studentId {get;set;}
+    
+    [JsonIgnore]
     public Student Student {get;set;} = null!;
 
     public Guid courseId {get;set;}

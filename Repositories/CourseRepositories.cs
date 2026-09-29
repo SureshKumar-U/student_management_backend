@@ -19,6 +19,8 @@ public interface ICourseRepository
     Task<List<CourseResponseDto>> GetAllCourses();
     Task DeleteCourse(Course course);
 
+     Task<List<Course>>  GetByIdsAsync( List<Guid> courseIds);
+
 
 
 }
@@ -65,6 +67,15 @@ public class CourseRepository : ICourseRepository
     {
         db.Courses.Update(course);
         await db.SaveChangesAsync();
+    }
+
+        public async Task<List<Course>> GetByIdsAsync(
+        List<Guid> courseIds)
+    {   
+
+        return await db.Courses
+            .Where(c => courseIds.Contains(c.Id))
+            .ToListAsync();
     }
 
     public async Task DeleteCourse(Course course)

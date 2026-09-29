@@ -2,9 +2,9 @@
 public enum UserRole
 {
     ADMIN,
-    Teacher,
+    TEACHER,
 
-    Student,
+    STUDENT,
 }
 
 

@@ -26,6 +26,11 @@ public class DepartmentService : IDepartmentService
 
     public async Task CreateDepartment(CreateDepartmentRequestDto createDepartmentDto)  
      {
+        Department existingDepartment = await  departmentRepository.GetDepartmentByName(createDepartmentDto.Name);
+        if(existingDepartment != null)
+        {
+            throw new Exception("department Already existed");
+        }
         Department department = new Department
         {
             Name = createDepartmentDto.Name,

@@ -12,12 +12,13 @@ namespace CrudAPi.Repositories;
 public interface IstudentRepository
 {
     Task CreateStudent(Student student);
-    Task<Student>? GetStudentById(int StudentId);
-    Task DeleteStudentById(int studentId);
+    Task<Student>? GetStudentByUserId(Guid userId);
+    Task<Student>? GetStudentById(Guid userId);
+    Task DeleteStudentById(Guid studentId);
     Task<List<StudentResponseDto>> GetAllStudents();
-    Task UpdateStudent(int studentId, UpdateStudentDto UpdateStudent);
+    Task UpdateStudent(Guid studentId, UpdateStudentDto UpdateStudent);
 
-
+   Task<List<Course>> GetCoursesByUserId(Guid userId);
 
 }
 
@@ -37,13 +38,38 @@ public class StudentRepository : IstudentRepository
 
     }
 
-    public async Task<Student>? GetStudentById(int StudentId)
+
+    public async Task<Student>? GetStudentById(Guid studentId)
     {
-        Student? student = await db.Students.FindAsync(StudentId);
-        return student;
+        // Student? student = await db.Students.FindAsync(StudentId);
+        // return student;
+
+        return await db.Students
+        .Include(s => s.Department)
+        .Include(s => s.User)
+        .Include(s => s.Enrollments)
+            .ThenInclude(e => e.Course)
+        .FirstOrDefaultAsync(s => s.Id == studentId);
     }
 
-    public async Task DeleteStudentById(int studentId)
+
+
+
+
+    public async Task<Student>? GetStudentByUserId(Guid userId)
+    {
+        // Student? student = await db.Students.FindAsync(StudentId);
+        // return student;
+
+        return await db.Students
+        .Include(s => s.Department)
+        .Include(s => s.User)
+        .Include(s => s.Enrollments)
+            .ThenInclude(e => e.Course)
+        .FirstOrDefaultAsync(s => s.UserId == userId);
+    }
+
+    public async Task DeleteStudentById(Guid studentId)
     {
         Student? student = await db.Students.FindAsync(studentId);
 
@@ -58,46 +84,80 @@ public class StudentRepository : IstudentRepository
 
 
     public async Task<List<StudentResponseDto>> GetAllStudents()
-{
-    return await db.Students
-        .Select(s => new StudentResponseDto
-        {
-            Id = s.Id,
-            RollNumber = s.RollNumber,
-
-            User = new UserResponseDto
-            {
-                Id = s.User.Id,
-                Name = s.User.Name,
-                Email = s.User.Email,
-                Role = s.User.Role
-            },
-
-            Department = new DepartmentResponseDto
-            {
-                Id = s.Department.Id,
-                Name = s.Department.Name
-            }
-        })
-        .ToListAsync();
-}
-
-
-    public async Task UpdateStudent(int id, UpdateStudentDto updateStudentDto)
     {
-        Student student = await GetStudentById(id);
+        return await db.Students
+            .Select(s => new StudentResponseDto
+            {
+                Id = s.Id,
+                RollNumber = s.RollNumber,
+
+                User = new UserResponseDto
+                {
+                    Id = s.User.Id,
+                    Name = s.User.Name,
+                    Email = s.User.Email,
+                    Role = s.User.Role
+                },
+
+                Department = new DepartmentResponseDto
+                {
+                    Id = s.Department.Id,
+                    Name = s.Department.Name
+                }
+            })
+            .ToListAsync();
+    }
+
+
+    public async Task UpdateStudent(Guid id, UpdateStudentDto updateStudentDto)
+    {
+        Student student = await db.Students.Include(s => s.User)
+        .Include(s => s.Department)
+        .FirstOrDefaultAsync(s => s.Id == id);
 
         if (student == null)
+        {
+            throw new NotFoundException($"Student not found with {id}");
+        }
+        if (student.User == null)
         {
             throw new NotFoundException($"Student not foud with ${id}");
         }
         student.User.Email = updateStudentDto.Email ?? student.User.Email;
-
-        db.Students.Update(student);
-        db.SaveChanges();
+        student.User.Name = updateStudentDto.Name ?? student.User.Name;
+         db.Students.Update(student);
+       await db.SaveChangesAsync();
 
     }
 
+
+    public async Task<List<Course>> GetCoursesByUserId(Guid userId)
+{
+    var student = await db.Students
+        .FirstOrDefaultAsync(s => s.UserId == userId);
+
+    if (student == null)
+    {
+        throw new NotFoundException($"Student not found for UserId: {userId}");
+    }
+
+
+var courses = await db.Enrollments
+    .Where(e => e.studentId == student.Id)
+    .Include(e => e.Course)
+        .ThenInclude(c => c.Department)
+    .Select(e => e.Course)
+    .ToListAsync();
+
+    // var courses = await db.Enrollments
+    //     .Where(e => e.studentId == student.Id)
+    //     .Include(e => e.Course)
+    //      .Include(e => e.Course)
+    //     .Select(e => e.Course)
+    //     .ToListAsync();
+
+    return courses;
+}
 
 
 }

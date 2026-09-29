@@ -35,6 +35,9 @@ builder.Services.AddScoped<ICourseRepository,CourseRepository>();
 builder.Services.AddScoped<IAdminDashboardRepository, AdminDashboardRepository>();
 builder.Services.AddScoped<IAdminDashboardService, AdminDashboardService>();
 builder.Services.AddScoped<IJwtService, JwtService>();
+builder.Services.AddScoped<IEnrollmentRepository, EnrollmentRepository>();
+builder.Services.AddScoped<IEnrollmentService, EnrollmentService>();
+
 // Register your custom exception handling service
 builder.Services.AddExceptionHandler<CrudAPi.Exceptions.CustomExceptionHandler>();
 

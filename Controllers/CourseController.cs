@@ -23,7 +23,7 @@ public class CourseController : ControllerBase
      }
      
      [HttpPost]
-     [Authorize(Roles = "ADMIN")]
+     [Authorize(Roles = "ADMIN,STUDENT")]
      public async Task<IActionResult> CreateCourse([FromBody] CreateCourseRequestDto createCourseDto)
      {
           await courseService.CreateCourse(createCourseDto);
@@ -40,7 +40,8 @@ public class CourseController : ControllerBase
 
 
      [HttpGet]
-     [Authorize(Roles = "ADMIN")]
+     [Authorize(Roles = "ADMIN,STUDENT")]
+
      public async Task<ActionResult<ApiResponse<List<CourseResponseDto>>>> GetAllCourses()
      {
           List<CourseResponseDto> courses = await courseService.GetAllCourses();
@@ -54,7 +55,8 @@ public class CourseController : ControllerBase
      }
 
      [HttpGet("{id}")]
-     [Authorize(Roles = "ADMIN")]
+     [Authorize(Roles = "ADMIN,STUDENT")]
+
      public async Task<ActionResult<ApiResponse<Course>>> GetCourseById(Guid id)
      {
           Course course = await courseService.GetCourseById(id);
@@ -68,7 +70,8 @@ public class CourseController : ControllerBase
      }
 
      [HttpPut("{id}")]
-     [Authorize(Roles = "ADMIN")]
+     [Authorize(Roles = "ADMIN,STUDENT")]
+
      public async Task<IActionResult> UpdateCourseById([FromBody] UpdateCourseRequestDto courseDto, [FromRoute] Guid id)
      {
        
@@ -82,7 +85,8 @@ public class CourseController : ControllerBase
      }
 
      [HttpDelete("{id}")]
-     [Authorize(Roles = "ADMIN")]
+     [Authorize(Roles = "ADMIN,STUDENT")]
+
      public async Task<IActionResult> DeleteCourseById([FromRoute] Guid id)
      {
           await courseService.DeleteCourseById(id);
@@ -94,4 +98,5 @@ public class CourseController : ControllerBase
 
           return Ok(response);
      }
+     
 }

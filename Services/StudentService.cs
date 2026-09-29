@@ -9,10 +9,11 @@ namespace CrudAPi.Services;  // import  services
 public interface IStudentService
 {
   Task<List<StudentResponseDto>> GetAllStudents();
-  Task<Student> GetStudent(int id);
+  Task<Student> GetStudent(Guid id);
   Task AddStudent(CreateStudentDto studentDto);
-  Task UpdateStudent(int id,UpdateStudentDto updateStudentDto);
-  Task DeleteStudent(int id);
+  Task UpdateStudent(Guid id,UpdateStudentDto updateStudentDto);
+  Task DeleteStudent(Guid id);
+  Task<List<Course>> GetCoursesByUserId(Guid userId);
 }
 
 
@@ -27,8 +28,18 @@ public class StudentService : IStudentService{
          studentRepository = studentRepo;
     }
 
-    public async Task<Student> GetStudent(int id){
-        Student student = await studentRepository.GetStudentById(id);
+    public async Task<Student> GetStudent(Guid id){
+        Student student = await studentRepository.GetStudentByUserId(id);
+        if(student == null)
+        {
+            
+            throw new NotFoundException($"User with ID {id} does not exist.");
+        }
+        return student;
+
+    }
+        public async Task<Student> GetStudentById(Guid id){
+        Student student = await studentRepository.GetStudentByUserId(id);
         if(student == null)
         {
             
@@ -42,12 +53,12 @@ public class StudentService : IStudentService{
         return await studentRepository.GetAllStudents();
     }
 
-    public async Task UpdateStudent(int id, UpdateStudentDto updateStudentDto){
+    public async Task UpdateStudent(Guid id, UpdateStudentDto updateStudentDto){
          await studentRepository.UpdateStudent(id,updateStudentDto);
 
     }
     
-    public async Task DeleteStudent(int id){
+    public async Task DeleteStudent(Guid id){
         await  studentRepository.DeleteStudentById(id);
     } 
      public async Task AddStudent(CreateStudentDto studentDto){
@@ -61,5 +72,11 @@ public class StudentService : IStudentService{
       await studentRepository.CreateStudent(student);
     
     } 
+
+    public async Task<List<Course>> GetCoursesByUserId(Guid userId)
+{
+    return await studentRepository.GetCoursesByUserId(userId);
+}
+
 
 }

@@ -1,5 +1,6 @@
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
+using System.Text.Json.Serialization;
 using StudentManagement.Models;
 namespace CrudAPi.Models;
 
@@ -17,6 +18,9 @@ public class Student
     public string RollNumber { get; set; }
 
     // Courses
-    public ICollection<Course> Courses { get; set; }
-        = new List<Course>();
+  
+    // Courses enrolled by this student
+  
+    public ICollection<Enrollment> Enrollments { get; set; }
+        = new List<Enrollment>();
 }
