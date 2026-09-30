@@ -3,9 +3,10 @@ namespace CrudAPi.Controllers;
 using CrudAPi.common;
 using CrudAPi.Dtos;
 using CrudAPi.Models;
+using CrudAPi.Services;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using StudentManagement.Models;
+
 
 [ApiController]
 [Route("api/v1/departments")]
@@ -30,8 +31,8 @@ public class DepartmentController : ControllerBase
         return StatusCode(StatusCodes.Status201Created, response);
     }
 
-     [HttpPut("{id}")]
-     [Authorize(Roles = "ADMIN")]
+    [HttpPut("{id}")]
+    [Authorize(Roles = "ADMIN")]
     public async Task<IActionResult> UpdateDepartment([FromRoute] Guid id, [FromBody] UpdateDepartmentRequestDto updateDepartmentRequestDto)
     {
         await departmentService.UpdateDepartmentById(id, updateDepartmentRequestDto);
@@ -50,7 +51,7 @@ public class DepartmentController : ControllerBase
         Department? department = await departmentService.GetDepartment(id);
         ApiResponse<Department> response = new ApiResponse<Department>
         {
-            message = "Department Updated successfully",
+            message = "Department fetched successfully",
             status = 200,
             data = department,
         };
@@ -62,9 +63,9 @@ public class DepartmentController : ControllerBase
     public async Task<ActionResult<ApiResponse<List<Department>>>> GetAllDepartments()
     {
         List<Department> departments = await departmentService.GetAllDepartments();
-       ApiResponse<List<Department>> response = new ApiResponse<List<Department>>
+        ApiResponse<List<Department>> response = new ApiResponse<List<Department>>
         {
-            message = "Department Updated successfully",
+            message = "Departments Fetched successfully",
             status = 200,
             data = departments,
         };
@@ -76,11 +77,11 @@ public class DepartmentController : ControllerBase
     public async Task<IActionResult> DeleteDepartment([FromRoute] Guid id)
     {
         await departmentService.DeleteDepartment(id);
-       ApiResponse<object> response = new ApiResponse<object>
+        ApiResponse<object> response = new ApiResponse<object>
         {
             message = "Department Deleted successfully",
             status = 200,
-      
+
         };
         return Ok(response);
     }

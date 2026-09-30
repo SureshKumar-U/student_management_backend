@@ -1,9 +1,9 @@
-using CrudAPi.Dtos;
-using CrudAPi.Models;
-using CrudAPi.Repositories;
-
 namespace CrudAPi.Services;
 
+using CrudAPi.Dtos;
+using CrudAPi.Exceptions;
+using CrudAPi.Models;
+using CrudAPi.Repositories;
 public interface IEnrollmentService
 {
     Task EnrollStudentAsync(
@@ -16,7 +16,6 @@ public class EnrollmentService : IEnrollmentService
     private readonly IstudentRepository _studentRepository;
     private readonly ICourseRepository _courseRepository;
     private readonly IEnrollmentRepository _enrollmentRepository;
-
     public EnrollmentService(
         IstudentRepository studentRepository,
         ICourseRepository courseRepository,
@@ -26,7 +25,6 @@ public class EnrollmentService : IEnrollmentService
         _courseRepository = courseRepository;
         _enrollmentRepository = enrollmentRepository;
     }
-
     public async Task EnrollStudentAsync(
         EnrollStudentRequest request)
     {
@@ -35,50 +33,30 @@ public class EnrollmentService : IEnrollmentService
         // Check student
         var student = await _studentRepository
             .GetStudentByUserId(request.UserId);
-
         if (student == null)
             throw new Exception("Student not found.");
-
         // Remove duplicate course IDs
         var courseId = request.CourseId;
-
-
-        // Get courses
         var course = await _courseRepository.GetCourseById(courseId);
-
-
-
         if (course == null)
-            throw new Exception(
+            throw new NotFoundException(
                 "Course  was not found.");
-
-
-
-
-        // Check duplicate enrollment
         var alreadyEnrolled =
             await _enrollmentRepository.ExistsAsync(
                 student.Id,
                 course.Id);
-
         if (alreadyEnrolled)
-             throw new Exception(
-                "Student is already enrolled in the selected courses.");
-
-        var enrollment =   new Enrollment
+            throw new Exception(
+               "Student is already enrolled in the selected courses.");
+        var enrollment = new Enrollment
         {
             studentId = student.Id,
             courseId = course.Id,
             EnrolledDate = DateTime.UtcNow,
             Status = EnrollmentStatus.Enrolled
         };
-
-
-
-
         await _enrollmentRepository
             .AddRangeAsync(enrollment);
-
         await _enrollmentRepository.SaveChangesAsync();
     }
 }

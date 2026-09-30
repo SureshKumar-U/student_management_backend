@@ -3,9 +3,6 @@ using CrudAPi.Dtos;
 using CrudAPi.Exceptions;
 using CrudAPi.Models;
 using Microsoft.AspNetCore.Mvc;
-using StudentManagement.Models;
-
-
 
 public interface ICourseService
 {

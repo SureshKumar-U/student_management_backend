@@ -3,11 +3,8 @@ using CrudAPi.Data;
 using CrudAPi.Exceptions;
 using CrudAPi.Models;
 using CrudAPi.Services;
-using Microsoft.AspNetCore.Http.HttpResults;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
-using StudentManagement.Models;
-using BCrypt.Net;
 using CrudAPi.Dtos;
 
 namespace CrudAPi.Controllers;
@@ -23,13 +20,10 @@ public class AuthController : ControllerBase
         db = dbcontext;
         _jwtService = jwtService;
     }
-
     [HttpPost("login")]
-
     public async Task<IActionResult> Login(LoginUserDto loginUserDto)
     {
         var user = await db.Users.FirstOrDefaultAsync(user => user.Email == loginUserDto.Email);
-        
         if (user == null)
         {
             throw new UnauthorizedException("User dont have an account ");
@@ -55,23 +49,17 @@ public class AuthController : ControllerBase
             },
             status = 200,
         };
-
         return StatusCode(StatusCodes.Status200OK, response);
-
     }
-
-
     [HttpPost("signup")]
     public async Task<IActionResult> SignUp(SignUpUserDto signUpUserDto)
     {
         var existedUser = await db.Users.FirstOrDefaultAsync(user => user.Email == signUpUserDto.Email);
-
         if (existedUser != null)
         {
             throw new UserAlreadyExistsException("User Already had an account");
         }
         string hashedPassword = BCrypt.Net.BCrypt.HashPassword(signUpUserDto.Password);
-
         var user = new User
         {
             Email = signUpUserDto.Email,
@@ -79,7 +67,6 @@ public class AuthController : ControllerBase
             PasswordHash = hashedPassword,
             Role = signUpUserDto.Role,
         };
-
         await db.Users.AddAsync(user);
         if (signUpUserDto.Role == UserRole.STUDENT)
         {
@@ -89,7 +76,6 @@ public class AuthController : ControllerBase
             };
             await db.Students.AddAsync(student);
         }
-
         await db.SaveChangesAsync();
         var response = new ApiResponse<object>
         {
@@ -97,12 +83,10 @@ public class AuthController : ControllerBase
             status = 201,
         };
         return StatusCode(StatusCodes.Status201Created, response);
-
     }
 
     [HttpGet("users")]
     public async Task<IActionResult> GetAllUsers()
-
     {
         var users = await db.Users
             .Select(u => new UserResponseDto
@@ -113,16 +97,12 @@ public class AuthController : ControllerBase
                 Role = u.Role
             })
             .ToListAsync();
-
         var response = new ApiResponse<List<UserResponseDto>>
         {
             message = "User fetched successfully",
             status = 200,
             data = users,
         };
-
         return StatusCode(StatusCodes.Status200OK, response);
-
-
     }
 }

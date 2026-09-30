@@ -50,7 +50,6 @@ public class StudentController : ControllerBase
 
     public async Task<ActionResult<ApiResponse<Student>>> GetStudentById(Guid id)
     {
-
         Student student = await _studentService.GetStudentById(id);
         return Ok(new ApiResponse<Student>
         {
@@ -87,10 +86,9 @@ public class StudentController : ControllerBase
     }
     [Authorize(Roles = "STUDENT")]
     [HttpPost]
-    public IActionResult CreateStudent(CreateStudentDto studentDto)
+    public async Task<IActionResult> CreateStudent(CreateStudentDto studentDto)
     {
-        _studentService.AddStudent(studentDto);
-
+        await _studentService.AddStudent(studentDto);
         return Ok(new ApiResponse<string>
         {
             message = "student created succesfully",
@@ -101,10 +99,9 @@ public class StudentController : ControllerBase
 
     [Authorize(Roles = "STUDENT")]
     [HttpGet("courses/{userId}")]
-    public async Task<IActionResult> GetCoursesByUserId([FromRoute]  Guid userId)
+    public async Task<IActionResult> GetCoursesByUserId([FromRoute] Guid userId)
     {
         var courses = await _studentService.GetCoursesByUserId(userId);
-
         return Ok(new
         {
             success = true,
@@ -117,15 +114,10 @@ public class StudentController : ControllerBase
     public async Task<IActionResult> GetRecentStudents()
     {
         var courses = await _studentService.GetRecentStudents();
-
         return Ok(new
         {
             success = true,
             data = courses
         });
     }
-
-
-
-
 }

@@ -1,13 +1,11 @@
 
-
-
 using CrudAPi.Data;
 using CrudAPi.Dtos;
 using CrudAPi.Exceptions;
 using CrudAPi.Models;
 using Microsoft.AspNetCore.Http.HttpResults;
 using Microsoft.EntityFrameworkCore;
-using StudentManagement.Models;
+using CrudAPi.Models;
 
 
 

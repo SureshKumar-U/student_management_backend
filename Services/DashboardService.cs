@@ -1,30 +1,22 @@
-
+namespace CrudAPi.Services;
 using CrudAPi.Dtos;
 using CrudAPi.Repositories;
-namespace CrudAPi.Services;
-
-
-    public interface IAdminDashboardService
+public interface IAdminDashboardService
+{
+    Task<AdminDashboardStatsDto> GetDashboardStatsAsync();
+}
+public class AdminDashboardService : IAdminDashboardService
+{
+    private readonly IAdminDashboardRepository _repository;
+    public AdminDashboardService(
+        IAdminDashboardRepository repository)
     {
-        Task<AdminDashboardStatsDto> GetDashboardStatsAsync();
+        _repository = repository;
     }
 
-
-
-
-    public class AdminDashboardService : IAdminDashboardService
+    public async Task<AdminDashboardStatsDto> GetDashboardStatsAsync()
     {
-        private readonly IAdminDashboardRepository _repository;
-
-        public AdminDashboardService(
-            IAdminDashboardRepository repository)
-        {
-            _repository = repository;
-        }
-
-        public async Task<AdminDashboardStatsDto> GetDashboardStatsAsync()
-        {
-            return await _repository.GetDashboardStatsAsync();
-        }
+        return await _repository.GetDashboardStatsAsync();
     }
+}
 

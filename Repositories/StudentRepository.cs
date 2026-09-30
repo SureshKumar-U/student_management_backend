@@ -88,6 +88,7 @@ public class StudentRepository : IstudentRepository
 
     public async Task<List<StudentResponseDto>> GetAllStudents()
     {
+        
         return await db.Students
             .Select(s => new StudentResponseDto
             {
@@ -164,9 +165,11 @@ public class StudentRepository : IstudentRepository
     {
 
         var recentStudents = await db.Students
-          .OrderByDescending(s => s.CreatedAt)
-          .Take(10)
-          .ToListAsync();
+    .Include(s => s.User)
+    .Include(s => s.Department)
+    .OrderByDescending(s => s.CreatedAt)
+    .Take(10)
+    .ToListAsync();
 
         return recentStudents;
 
