@@ -6,7 +6,6 @@ using CrudAPi.common;
 using Microsoft.AspNetCore.Authorization;
 namespace CrudAPi.Controllers;
 
-
 [ApiController]
 [Route("api/v1/students")]
 public class StudentController : ControllerBase
@@ -46,6 +45,21 @@ public class StudentController : ControllerBase
         });
     }
 
+    [HttpGet("student/{id}")]
+    [Authorize(Roles = "STUDENT,ADMIN")]
+
+    public async Task<ActionResult<ApiResponse<Student>>> GetStudentById(Guid id)
+    {
+
+        Student student = await _studentService.GetStudentById(id);
+        return Ok(new ApiResponse<Student>
+        {
+            message = "student fetched by id successfully",
+            data = student,
+            status = 200,
+        });
+    }
+
     [HttpPut("{id}")]
     [Authorize(Roles = "STUDENT,ADMIN")]
     public async Task<IActionResult> UpdateStudent(Guid id, UpdateStudentDto updateStudentDto)
@@ -59,7 +73,7 @@ public class StudentController : ControllerBase
 
     }
     [HttpDelete("{id}")]
-    [Authorize(Roles = "STUDENT")]
+    [Authorize(Roles = "STUDENT,ADMIN")]
     public async Task<IActionResult> DeleteStudent(Guid id)
     {
         await _studentService.DeleteStudent(id);
@@ -90,6 +104,19 @@ public class StudentController : ControllerBase
     public async Task<IActionResult> GetCoursesByUserId([FromRoute]  Guid userId)
     {
         var courses = await _studentService.GetCoursesByUserId(userId);
+
+        return Ok(new
+        {
+            success = true,
+            data = courses
+        });
+    }
+
+    [Authorize(Roles = "ADMIN")]
+    [HttpGet("recent")]
+    public async Task<IActionResult> GetRecentStudents()
+    {
+        var courses = await _studentService.GetRecentStudents();
 
         return Ok(new
         {

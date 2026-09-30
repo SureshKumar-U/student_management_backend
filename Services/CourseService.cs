@@ -1,11 +1,11 @@
-
+namespace CrudAPi.Models;
 using CrudAPi.Dtos;
 using CrudAPi.Exceptions;
 using CrudAPi.Models;
 using Microsoft.AspNetCore.Mvc;
 using StudentManagement.Models;
 
-namespace CrudAPi.Models;
+
 
 public interface ICourseService
 {

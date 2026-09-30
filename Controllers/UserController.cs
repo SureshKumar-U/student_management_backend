@@ -1,5 +1,3 @@
-
-
 using CrudAPi.common;
 using CrudAPi.Data;
 using CrudAPi.Exceptions;
@@ -31,7 +29,7 @@ public class AuthController : ControllerBase
     public async Task<IActionResult> Login(LoginUserDto loginUserDto)
     {
         var user = await db.Users.FirstOrDefaultAsync(user => user.Email == loginUserDto.Email);
-
+        
         if (user == null)
         {
             throw new UnauthorizedException("User dont have an account ");
@@ -68,7 +66,6 @@ public class AuthController : ControllerBase
     {
         var existedUser = await db.Users.FirstOrDefaultAsync(user => user.Email == signUpUserDto.Email);
 
-
         if (existedUser != null)
         {
             throw new UserAlreadyExistsException("User Already had an account");
@@ -84,6 +81,15 @@ public class AuthController : ControllerBase
         };
 
         await db.Users.AddAsync(user);
+        if (signUpUserDto.Role == UserRole.STUDENT)
+        {
+            var student = new Student
+            {
+                UserId = user.Id
+            };
+            await db.Students.AddAsync(student);
+        }
+
         await db.SaveChangesAsync();
         var response = new ApiResponse<object>
         {

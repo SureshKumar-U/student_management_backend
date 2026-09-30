@@ -40,7 +40,7 @@ public class DeparmentRepository:IDepartmentRepository
     public async Task<Department?> GetDepartmentByName(string departmentName)
     {
          return await db.Departments.FirstOrDefaultAsync(x => x.Name == departmentName);
-
+    }
 
     public async Task<Department?> GetDepartmentById(Guid departmentId)
     {   Console.WriteLine(departmentId);

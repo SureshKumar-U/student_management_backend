@@ -6,6 +6,6 @@ public class UpdateStudentDto{
     public string Name { get; set; }
 
      public string Email { get; set; }
-    public string Department { get; set; }
+    public Guid? DepartmentId { get; set; }
 
 }
