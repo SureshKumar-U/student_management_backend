@@ -5,7 +5,6 @@ using System.Text;
 using CrudAPi.Models;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.IdentityModel.Tokens;
-using StudentManagement.Models;
 
 public interface IJwtService
 {

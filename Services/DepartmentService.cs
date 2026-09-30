@@ -3,7 +3,6 @@ using CrudAPi.Dtos;
 using CrudAPi.Exceptions;
 using CrudAPi.Models;
 using CrudAPi.Repositories;
-using StudentManagement.Models;
 
 public interface IDepartmentService
 {
