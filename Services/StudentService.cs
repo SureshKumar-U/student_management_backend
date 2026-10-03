@@ -20,14 +20,14 @@ public interface IStudentService
 
 public class StudentService : IStudentService
 {
-    public IstudentRepository studentRepository;
-    public StudentService(IstudentRepository studentRepo)
+    private readonly IStudentRepository  _studentRepository;
+    public StudentService(IStudentRepository  studentRepo)
     {
-        studentRepository = studentRepo;
+        _studentRepository = studentRepo;
     }
     public async Task<Student> GetStudent(Guid id)
     {
-        Student? student = await studentRepository.GetStudentByUserId(id);
+        Student? student = await _studentRepository.GetStudentByUserId(id);
         if (student == null)
         {
             throw new NotFoundException($"User with ID {id} does not exist.");
@@ -36,7 +36,7 @@ public class StudentService : IStudentService
     }
     public async Task<Student> GetStudentById(Guid id)
     {
-        Student student = await studentRepository.GetStudentById(id);
+        Student student = await _studentRepository.GetStudentById(id);
         if (student == null)
         {
             throw new NotFoundException($"User with ID {id} does not exist.");
@@ -45,15 +45,15 @@ public class StudentService : IStudentService
     }
     public async Task<List<StudentResponseDto>> GetAllStudents()
     {
-        return await studentRepository.GetAllStudents();
+        return await _studentRepository.GetAllStudents();
     }
     public async Task UpdateStudent(Guid id, UpdateStudentDto updateStudentDto)
     {
-        await studentRepository.UpdateStudent(id, updateStudentDto);
+        await _studentRepository.UpdateStudent(id, updateStudentDto);
     }
     public async Task DeleteStudent(Guid id)
     {
-        await studentRepository.DeleteStudentById(id);
+        await _studentRepository.DeleteStudentById(id);
     }
     public async Task AddStudent(CreateStudentDto studentDto)
     {
@@ -63,15 +63,15 @@ public class StudentService : IStudentService
             DepartmentId = studentDto.DepartmentId,
             RollNumber = studentDto.RollNumber
         };
-        await studentRepository.CreateStudent(student);
+        await _studentRepository.CreateStudent(student);
     }
 
     public async Task<List<Course>> GetCoursesByUserId(Guid userId)
     {
-        return await studentRepository.GetCoursesByUserId(userId);
+        return await _studentRepository.GetCoursesByUserId(userId);
     }
     public async Task<List<Student>> GetRecentStudents()
     {
-        return await studentRepository.GetRecentStudents();
+        return await _studentRepository.GetRecentStudents();
     }
 }

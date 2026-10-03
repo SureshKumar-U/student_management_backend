@@ -27,7 +27,7 @@ builder.Services.AddControllers()
             new JsonStringEnumConverter());
     });
 builder.Services.AddScoped<IStudentService, StudentService>();
-builder.Services.AddScoped<IstudentRepository, StudentRepository>();
+builder.Services.AddScoped<IStudentRepository , StudentRepository>();
 builder.Services.AddScoped<IDepartmentService,DepartmentService>();
 builder.Services.AddScoped<IDepartmentRepository,DeparmentRepository>();
 builder.Services.AddScoped<ICourseService,CourseService>();

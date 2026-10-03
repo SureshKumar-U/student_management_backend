@@ -8,11 +8,11 @@ using Microsoft.EntityFrameworkCore;
 
 namespace CrudAPi.Repositories;
 
-public interface IstudentRepository
+public interface IStudentRepository 
 {
     Task CreateStudent(Student student);
-    Task<Student>? GetStudentByUserId(Guid userId);
-    Task<Student>? GetStudentById(Guid userId);
+    Task<Student?> GetStudentByUserId(Guid userId);
+    Task<Student?> GetStudentById(Guid userId);
     Task DeleteStudentById(Guid studentId);
     Task<List<StudentResponseDto>> GetAllStudents();
     Task UpdateStudent(Guid studentId, UpdateStudentDto UpdateStudent);
@@ -22,7 +22,7 @@ public interface IstudentRepository
 }
 
 
-public class StudentRepository : IstudentRepository
+public class StudentRepository : IStudentRepository 
 {
     public AppDbContext db;
     public StudentRepository(AppDbContext dbContext)
@@ -38,7 +38,7 @@ public class StudentRepository : IstudentRepository
     }
 
 
-    public async Task<Student>? GetStudentById(Guid studentId)
+    public async Task<Student?> GetStudentById(Guid studentId)
     {
         // Student? student = await db.Students.FindAsync(StudentId);
         // return student;
@@ -55,7 +55,7 @@ public class StudentRepository : IstudentRepository
 
 
 
-    public async Task<Student>? GetStudentByUserId(Guid userId)
+    public async Task<Student?> GetStudentByUserId(Guid userId)
     {
         // Student? student = await db.Students.FindAsync(StudentId);
         // return student;
@@ -82,7 +82,7 @@ public class StudentRepository : IstudentRepository
         }
         ;
         db.Students.Remove(student);
-        db.SaveChanges();
+        await db.SaveChangesAsync();
     }
 
 

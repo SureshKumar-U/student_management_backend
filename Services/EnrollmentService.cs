@@ -13,11 +13,11 @@ public interface IEnrollmentService
 
 public class EnrollmentService : IEnrollmentService
 {
-    private readonly IstudentRepository _studentRepository;
+    private readonly IStudentRepository  _studentRepository;
     private readonly ICourseRepository _courseRepository;
     private readonly IEnrollmentRepository _enrollmentRepository;
     public EnrollmentService(
-        IstudentRepository studentRepository,
+        IStudentRepository  studentRepository,
         ICourseRepository courseRepository,
         IEnrollmentRepository enrollmentRepository)
     {

@@ -15,8 +15,8 @@ public interface IDepartmentService
 public class DepartmentService : IDepartmentService
 {
     private readonly IDepartmentRepository departmentRepository;
-    public readonly IstudentRepository studentRepository;
-    public DepartmentService(IDepartmentRepository departmentRepo, IstudentRepository studentRepo)
+    public readonly IStudentRepository studentRepository;
+    public DepartmentService(IDepartmentRepository departmentRepo, IStudentRepository  studentRepo)
     {
         departmentRepository = departmentRepo;
         studentRepository = studentRepo;
