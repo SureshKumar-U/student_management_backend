@@ -17,7 +17,7 @@ public class StudentController : ControllerBase
     }
 
     [HttpGet]
-    [Authorize(Roles = "STUDENT,ADMIN")]
+    [Authorize(Roles = "ADMIN")]
     public async Task<IActionResult> GetAllStudents()
     {
         List<StudentResponseDto> students = await _studentService.GetAllStudents();
@@ -48,10 +48,10 @@ public class StudentController : ControllerBase
     [HttpGet("student/{id}")]
     [Authorize(Roles = "STUDENT,ADMIN")]
 
-    public async Task<ActionResult<ApiResponse<Student>>> GetStudentById(Guid id)
+    public async Task<ActionResult<ApiResponse<StudentResponseDto>>> GetStudentById(Guid id)
     {
-        Student student = await _studentService.GetStudentById(id);
-        return Ok(new ApiResponse<Student>
+        StudentResponseDto student = await _studentService.GetStudentById(id);
+        return Ok(new ApiResponse<StudentResponseDto>
         {
             message = "student fetched by id successfully",
             data = student,
@@ -71,6 +71,7 @@ public class StudentController : ControllerBase
         });
 
     }
+
     [HttpDelete("{id}")]
     [Authorize(Roles = "STUDENT,ADMIN")]
     public async Task<IActionResult> DeleteStudent(Guid id)
@@ -82,9 +83,9 @@ public class StudentController : ControllerBase
             status = 200,
             data = null,
         });
-
     }
-    [Authorize(Roles = "STUDENT")]
+
+    [Authorize(Roles = "ADMIN")]
     [HttpPost]
     public async Task<IActionResult> CreateStudent(CreateStudentDto studentDto)
     {

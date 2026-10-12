@@ -8,7 +8,7 @@ public interface IStudentService
 {
     Task<List<StudentResponseDto>> GetAllStudents();
     Task<Student> GetStudent(Guid id);
-    Task<Student> GetStudentById(Guid id);
+    Task<StudentResponseDto> GetStudentById(Guid id);
     Task AddStudent(CreateStudentDto studentDto);
     Task UpdateStudent(Guid id, UpdateStudentDto updateStudentDto);
     Task DeleteStudent(Guid id);
@@ -34,9 +34,9 @@ public class StudentService : IStudentService
         }
         return student;
     }
-    public async Task<Student> GetStudentById(Guid id)
+    public async Task<StudentResponseDto> GetStudentById(Guid id)
     {
-        Student student = await _studentRepository.GetStudentById(id);
+        StudentResponseDto student = await _studentRepository.GetStudentById(id);
         if (student == null)
         {
             throw new NotFoundException($"User with ID {id} does not exist.");
@@ -57,11 +57,30 @@ public class StudentService : IStudentService
     }
     public async Task AddStudent(CreateStudentDto studentDto)
     {
+        if (await _studentRepository.UserExistsByEmail(studentDto.Email))
+        {
+            throw new UserAlreadyExistsException("User already has an account.");
+        }
+
+        Guid departmentId = studentDto.DepartmentId
+            ?? throw new ArgumentException("DepartmentId is required.");
+
+        if (!await _studentRepository.DepartmentExists(departmentId))
+        {
+            throw new NotFoundException($"Department with ID {departmentId} does not exist.");
+        }
+
         Student student = new Student
         {
-            UserId = studentDto.UserId,
-            DepartmentId = studentDto.DepartmentId,
-            RollNumber = studentDto.RollNumber
+            DepartmentId = departmentId,
+            RollNumber = studentDto.RollNumber,
+            User = new User
+            {
+                Name = studentDto.Name,
+                Email = studentDto.Email,
+                PasswordHash = BCrypt.Net.BCrypt.HashPassword(studentDto.Password),
+                Role = UserRole.STUDENT
+            }
         };
         await _studentRepository.CreateStudent(student);
     }

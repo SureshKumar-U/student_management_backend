@@ -6,6 +6,7 @@ using CrudAPi.Services;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using CrudAPi.Dtos;
+using Microsoft.AspNetCore.Authorization;
 
 namespace CrudAPi.Controllers;
 
@@ -42,7 +43,7 @@ public class AuthController : ControllerBase
             data = new LoginResponseDto
             {
                 Token = token,
-                Id = user.Id,
+                UserId = user.Id,
                 Name = user.Name,
                 Email = user.Email,
                 Role = user.Role
@@ -85,7 +86,9 @@ public class AuthController : ControllerBase
         return StatusCode(StatusCodes.Status201Created, response);
     }
 
+    
     [HttpGet("users")]
+    [Authorize(Roles ="ADMIN")]
     public async Task<IActionResult> GetAllUsers()
     {
         var users = await db.Users

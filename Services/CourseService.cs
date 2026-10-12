@@ -29,6 +29,12 @@ public class CourseService : ICourseService
 
     public async Task CreateCourse(CreateCourseRequestDto createCourseDto)
     {
+        Department? department = await departmentRepository.GetDepartmentById(createCourseDto.DepartmentId);
+        if (department == null)
+        {
+            throw new NotFoundException($"Department with ID {createCourseDto.DepartmentId} does not exist.");
+        }
+
         Course course = new Course
         {
             Name = createCourseDto.Name ?? "",

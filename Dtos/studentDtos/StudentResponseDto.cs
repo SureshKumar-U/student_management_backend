@@ -1,11 +1,13 @@
 namespace CrudAPi.Dtos;
+
 public class StudentResponseDto
 {
     public Guid Id { get; set; }
     public string RollNumber { get; set; } = string.Empty;
-
-    public UserResponseDto User { get; set; } = null!;
-    public DepartmentResponseDto Department { get; set; } = null!;
+    public string Name { get; set; } = string.Empty;
+    public string Email { get; set; } = string.Empty;
+    public UserRole Role { get; set; }
+    public DepartmentResponseDto? Department { get; set; }
 }
 
 

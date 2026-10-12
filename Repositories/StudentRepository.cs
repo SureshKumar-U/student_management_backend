@@ -3,63 +3,65 @@ using CrudAPi.Data;
 using CrudAPi.Dtos;
 using CrudAPi.Exceptions;
 using CrudAPi.Models;
-using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
-
 namespace CrudAPi.Repositories;
 
-public interface IStudentRepository 
+
+public interface IStudentRepository
 {
     Task CreateStudent(Student student);
+    Task<bool> UserExistsByEmail(string email);
+    Task<bool> DepartmentExists(Guid departmentId);
     Task<Student?> GetStudentByUserId(Guid userId);
-    Task<Student?> GetStudentById(Guid userId);
+    Task<StudentResponseDto?> GetStudentById(Guid userId);
     Task DeleteStudentById(Guid studentId);
     Task<List<StudentResponseDto>> GetAllStudents();
     Task UpdateStudent(Guid studentId, UpdateStudentDto UpdateStudent);
-
     Task<List<Course>> GetCoursesByUserId(Guid userId);
     Task<List<Student>> GetRecentStudents();
 }
 
-
-public class StudentRepository : IStudentRepository 
+public class StudentRepository : IStudentRepository
 {
     public AppDbContext db;
     public StudentRepository(AppDbContext dbContext)
     {
         db = dbContext;
     }
-
     public async Task CreateStudent(Student student)
     {
         await db.Students.AddAsync(student);
         await db.SaveChangesAsync();
-
     }
-
-
-    public async Task<Student?> GetStudentById(Guid studentId)
+    public Task<bool> UserExistsByEmail(string email)
     {
-        // Student? student = await db.Students.FindAsync(StudentId);
-        // return student;
-
-        return await db.Students
-        .Include(s => s.Department)
-        .Include(s => s.User)
-        .Include(s => s.Enrollments)
-            .ThenInclude(e => e.Course)
-        .FirstOrDefaultAsync(s => s.Id == studentId);
+        return db.Users.AnyAsync(user => user.Email == email);
+    }
+    public Task<bool> DepartmentExists(Guid departmentId)
+    {
+        return db.Departments.AnyAsync(department => department.Id == departmentId);
     }
 
-
-
-
-
+    public async Task<StudentResponseDto?> GetStudentById(Guid studentId)
+    {
+        return await db.Students
+                .Select(s => new StudentResponseDto
+                {
+                    Id = s.Id,
+                    RollNumber = s.RollNumber,
+                    Name = s.User.Name,
+                    Email = s.User.Email,
+                    Role = s.User.Role,
+                    Department = s.Department == null
+                ? null : new DepartmentResponseDto
+                {
+                    Id = s.Department.Id,
+                    Name = s.Department.Name
+                }
+                }).FirstOrDefaultAsync(s => s.Id == studentId);
+    }
     public async Task<Student?> GetStudentByUserId(Guid userId)
     {
-        // Student? student = await db.Students.FindAsync(StudentId);
-        // return student;
-
         return await db.Students
         .Include(s => s.Department)
         .Include(s => s.User)
@@ -88,21 +90,15 @@ public class StudentRepository : IStudentRepository
 
     public async Task<List<StudentResponseDto>> GetAllStudents()
     {
-        
+
         return await db.Students
             .Select(s => new StudentResponseDto
             {
                 Id = s.Id,
                 RollNumber = s.RollNumber,
-
-                User = new UserResponseDto
-                {
-                    Id = s.User.Id,
-                    Name = s.User.Name,
-                    Email = s.User.Email,
-                    Role = s.User.Role
-                },
-
+                Name = s.User.Name,
+                Email = s.User.Email,
+                Role = s.User.Role,
                 Department = s.Department == null
                 ? null : new DepartmentResponseDto
                 {
@@ -137,13 +133,10 @@ public class StudentRepository : IStudentRepository
     {
         var student = await db.Students
             .FirstOrDefaultAsync(s => s.UserId == userId);
-
         if (student == null)
         {
             throw new NotFoundException($"Student not found for UserId: {userId}");
         }
-
-
         var courses = await db.Enrollments
             .Where(e => e.studentId == student.Id)
             .Include(e => e.Course)
@@ -170,15 +163,6 @@ public class StudentRepository : IStudentRepository
     .OrderByDescending(s => s.CreatedAt)
     .Take(10)
     .ToListAsync();
-
         return recentStudents;
-
-
     }
-
-
-
-
-
-
 }

@@ -3,7 +3,22 @@ using System.ComponentModel.DataAnnotations;
 
 public class CreateStudentDto
 {
-    public Guid UserId { get; set; }
-    public Guid DepartmentId { get; set; }
-    public string RollNumber { get; set; } = null!;
+    [Required]
+    [StringLength(50)]
+    [EmailAddress]
+    public string Email { get; set; } = string.Empty;
+
+    [Required]
+    [StringLength(50)]
+    public string Name { get; set; } = string.Empty;
+
+    [Required]
+    [StringLength(100)]
+    public string Password { get; set; } = string.Empty;
+
+    [Required]
+    public Guid? DepartmentId { get; set; }
+
+    [Required]
+    public string RollNumber { get; set; } = string.Empty;
 }
