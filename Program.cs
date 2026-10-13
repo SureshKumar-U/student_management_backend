@@ -119,9 +119,9 @@ if (app.Environment.IsDevelopment())
     app.UseSwagger();//create endpoint for swagger.json
     app.UseSwaggerUI(); //Generate Swagger UI
 }
+app.UseCors("AllowAll");
 app.UseExceptionHandler();
 app.UseHttpsRedirection();
-app.UseCors("AllowAll");
 app.UseAuthentication();
 app.UseAuthorization();
 app.MapControllers();
