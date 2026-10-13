@@ -12,7 +12,7 @@ public interface IStudentRepository
     Task CreateStudent(Student student);
     Task<bool> UserExistsByEmail(string email);
     Task<bool> DepartmentExists(Guid departmentId);
-    Task<Student?> GetStudentByUserId(Guid userId);
+    Task<Student?> GetStudentDashboard(Guid userId);
     Task<StudentResponseDto?> GetStudentById(Guid userId);
     Task DeleteStudentById(Guid studentId);
     Task<List<StudentResponseDto>> GetAllStudents();
@@ -60,7 +60,7 @@ public class StudentRepository : IStudentRepository
                 }
                 }).FirstOrDefaultAsync(s => s.Id == studentId);
     }
-    public async Task<Student?> GetStudentByUserId(Guid userId)
+    public async Task<Student?> GetStudentDashboard(Guid userId)
     {
         return await db.Students
         .Include(s => s.Department)

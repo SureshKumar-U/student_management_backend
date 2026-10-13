@@ -28,11 +28,9 @@ public class EnrollmentService : IEnrollmentService
     public async Task EnrollStudentAsync(
         EnrollStudentRequest request)
     {
-        Console.WriteLine(request.CourseId);
-        Console.WriteLine(request.UserId);
         // Check student
         var student = await _studentRepository
-            .GetStudentByUserId(request.UserId);
+            .GetStudentDashboard(request.UserId);
         if (student == null)
             throw new Exception("Student not found.");
         // Remove duplicate course IDs

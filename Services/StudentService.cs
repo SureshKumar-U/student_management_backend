@@ -7,7 +7,7 @@ using CrudAPi.Exceptions;
 public interface IStudentService
 {
     Task<List<StudentResponseDto>> GetAllStudents();
-    Task<Student> GetStudent(Guid id);
+    Task<Student> GetStudentDashboard(Guid id);
     Task<StudentResponseDto> GetStudentById(Guid id);
     Task AddStudent(CreateStudentDto studentDto);
     Task UpdateStudent(Guid id, UpdateStudentDto updateStudentDto);
@@ -25,9 +25,9 @@ public class StudentService : IStudentService
     {
         _studentRepository = studentRepo;
     }
-    public async Task<Student> GetStudent(Guid id)
+    public async Task<Student> GetStudentDashboard(Guid id)
     {
-        Student? student = await _studentRepository.GetStudentByUserId(id);
+        Student? student = await _studentRepository.GetStudentDashboard(id);
         if (student == null)
         {
             throw new NotFoundException($"User with ID {id} does not exist.");

@@ -24,7 +24,9 @@ public class AuthController : ControllerBase
     [HttpPost("login")]
     public async Task<IActionResult> Login(LoginUserDto loginUserDto)
     {
-        var user = await db.Users.FirstOrDefaultAsync(user => user.Email == loginUserDto.Email);
+        var user = await db.Users.Include(u => u.Student)
+                .ThenInclude(s => s.Department)
+            .FirstOrDefaultAsync(user => user.Email == loginUserDto.Email);
         if (user == null)
         {
             throw new UnauthorizedException("User dont have an account ");
@@ -43,9 +45,10 @@ public class AuthController : ControllerBase
             data = new LoginResponseDto
             {
                 Token = token,
-                UserId = user.Id,
+                Id = user.Id,
                 Name = user.Name,
                 Email = user.Email,
+                StudentId =  user.Role == UserRole.STUDENT ?  user.Student.Id : null,
                 Role = user.Role
             },
             status = 200,
@@ -86,9 +89,9 @@ public class AuthController : ControllerBase
         return StatusCode(StatusCodes.Status201Created, response);
     }
 
-    
+
     [HttpGet("users")]
-    [Authorize(Roles ="ADMIN")]
+    [Authorize(Roles = "ADMIN")]
     public async Task<IActionResult> GetAllUsers()
     {
         var users = await db.Users

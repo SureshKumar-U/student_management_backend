@@ -30,13 +30,12 @@ public class StudentController : ControllerBase
         });
     }
 
-    [HttpGet("{id}")]
+    [HttpGet("student_dashboard/{id}")]
     [Authorize(Roles = "STUDENT,ADMIN")]
-
-    public async Task<ActionResult<ApiResponse<Student>>> GetStudent(Guid id)
+    public async Task<ActionResult<ApiResponse<Student>>> GetStudentDashboard(Guid id)
     {
 
-        Student student = await _studentService.GetStudent(id);
+        Student student = await _studentService.GetStudentDashboard(id);
         return Ok(new ApiResponse<Student>
         {
             message = "student fetched by id successfully",
@@ -45,9 +44,8 @@ public class StudentController : ControllerBase
         });
     }
 
-    [HttpGet("student/{id}")]
+    [HttpGet("{id}")]
     [Authorize(Roles = "STUDENT,ADMIN")]
-
     public async Task<ActionResult<ApiResponse<StudentResponseDto>>> GetStudentById(Guid id)
     {
         StudentResponseDto student = await _studentService.GetStudentById(id);
@@ -69,7 +67,6 @@ public class StudentController : ControllerBase
             message = "Student updated succesfully",
             status = 200,
         });
-
     }
 
     [HttpDelete("{id}")]
