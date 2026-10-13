@@ -48,7 +48,7 @@ public class AuthController : ControllerBase
                 Id = user.Id,
                 Name = user.Name,
                 Email = user.Email,
-                StudentId =  user.Role == UserRole.STUDENT ?  user.Student.Id : null,
+                StudentId =  user.Role == UserRole.STUDENT ?  user?.Student?.Id : null,
                 Role = user.Role
             },
             status = 200,
