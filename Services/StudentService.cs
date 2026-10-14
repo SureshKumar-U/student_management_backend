@@ -92,7 +92,5 @@ public class StudentService : IStudentService
     public async Task<List<Student>> GetRecentStudents()
     {
         return await _studentRepository.GetRecentStudents();
-    }
-
-    
+    }   
 }

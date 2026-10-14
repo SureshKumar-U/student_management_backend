@@ -94,21 +94,22 @@ public class StudentRepository : IStudentRepository
     public async Task<List<StudentResponseDto>> GetAllStudents()
     {
 
-        return await db.Students
-            .Select(s => new StudentResponseDto
+        return await db.Users
+            .Where(u => u.Role == UserRole.STUDENT)
+            .Select(u => new StudentResponseDto
             {
-                Id = s.Id,
-                UserId = s.UserId,
-                RollNumber = s.RollNumber,
-                Name = s.User.Name,
-                Email = s.User.Email,
-                Role = s.User.Role,
-                Department = s.Department == null
-                ? null : new DepartmentResponseDto
-                {
-                    Id = s.Department.Id,
-                    Name = s.Department.Name
-                }
+                UserId = u.Id,
+                RollNumber = u.Student == null ? null : u.Student.RollNumber,
+                Name = u.Name,
+                Email = u.Email,
+                Role = u.Role,
+                Department = u.Student == null || u.Student.Department == null
+                    ? null
+                    : new DepartmentResponseDto
+                    {
+                        Id = u.Student.Department.Id,
+                        Name = u.Student.Department.Name
+                    }
             })
             .ToListAsync();
     }
