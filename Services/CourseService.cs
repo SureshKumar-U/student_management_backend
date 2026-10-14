@@ -1,4 +1,5 @@
 namespace CrudAPi.Models;
+
 using CrudAPi.Dtos;
 using CrudAPi.Exceptions;
 using CrudAPi.Models;
@@ -11,16 +12,12 @@ public interface ICourseService
     Task DeleteCourseById(Guid courseId);
     Task UpdateCourse(Guid id, UpdateCourseRequestDto updateCourseDto);
     Task<List<CourseResponseDto>> GetAllCourses();
-
-
-
 }
+
 public class CourseService : ICourseService
 {
-
     public ICourseRepository courseRepository;
     public IDepartmentRepository departmentRepository;
-
     public CourseService(ICourseRepository courseRepo, IDepartmentRepository departmentRepo)
     {
         courseRepository = courseRepo;
@@ -34,17 +31,14 @@ public class CourseService : ICourseService
         {
             throw new NotFoundException($"Department with ID {createCourseDto.DepartmentId} does not exist.");
         }
-
         Course course = new Course
         {
             Name = createCourseDto.Name ?? "",
             DepartmentId = createCourseDto.DepartmentId,
             Code = createCourseDto.Code ?? ""
-
         };
         await courseRepository.CreateCourse(course);
     }
-
     public async Task<Course> GetCourseById(Guid id)
     {
         Course course = await courseRepository.GetCourseById(id);
@@ -71,11 +65,8 @@ public class CourseService : ICourseService
         {
             throw new BadHttpRequestException("Course update data is required");
         }
-
         Course? course = await courseRepository.GetCourseById(id);
         Department? department = await departmentRepository.GetDepartmentById(updateCourseDto.DepartmentId);
-
-
         if (course == null)
         {
             throw new NotFoundException($"Course bot Found with id: ${id}");
@@ -86,16 +77,13 @@ public class CourseService : ICourseService
             throw new NotFoundException($"Department Not Found with id: ${id}");
         }
         ;
-
         course.Name = updateCourseDto.Name ?? course.Name;
         course.Code = updateCourseDto.Code ?? course.Code;
         course.DepartmentId = updateCourseDto.DepartmentId;
         await courseRepository.UpdateCourse(course);
     }
-
     public async Task<List<CourseResponseDto>> GetAllCourses()
     {
         return await courseRepository.GetAllCourses();
-
     }
 }

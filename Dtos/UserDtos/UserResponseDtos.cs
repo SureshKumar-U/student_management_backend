@@ -1,5 +1,4 @@
 namespace CrudAPi.Dtos;
-
 public class UserResponseDto
 {
     public Guid Id { get; set; }

@@ -5,8 +5,6 @@ using CrudAPi.Models;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
-
-
 [ApiController]
 [Route("api/v1/courses")]
 public class CourseController : ControllerBase
@@ -56,6 +54,7 @@ public class CourseController : ControllerBase
           };
           return Ok(response);
      }
+
      [HttpPut("{id}")]
      [Authorize(Roles = "ADMIN,STUDENT")]
      public async Task<IActionResult> UpdateCourseById([FromBody] UpdateCourseRequestDto courseDto, [FromRoute] Guid id)
@@ -68,6 +67,7 @@ public class CourseController : ControllerBase
           };
           return Ok(response);
      }
+     
      [HttpDelete("{id}")]
      [Authorize(Roles = "ADMIN,STUDENT")]
      public async Task<IActionResult> DeleteCourseById([FromRoute] Guid id)
@@ -80,5 +80,5 @@ public class CourseController : ControllerBase
           };
           return Ok(response);
      }
-     
+
 }

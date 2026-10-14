@@ -1,5 +1,3 @@
-
-
 using System.ComponentModel.DataAnnotations;
 namespace CrudAPi.Dtos;
 public class CreateCourseRequestDto
@@ -10,6 +8,5 @@ public class CreateCourseRequestDto
 
     [StringLength(100)]
     public string Code {get;set;} = String.Empty;
-
     public Guid  DepartmentId {get;set;}
 }

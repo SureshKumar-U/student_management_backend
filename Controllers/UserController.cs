@@ -7,7 +7,6 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using CrudAPi.Dtos;
 using Microsoft.AspNetCore.Authorization;
-
 namespace CrudAPi.Controllers;
 
 [ApiController]
@@ -21,6 +20,7 @@ public class AuthController : ControllerBase
         db = dbcontext;
         _jwtService = jwtService;
     }
+
     [HttpPost("login")]
     public async Task<IActionResult> Login(LoginUserDto loginUserDto)
     {
@@ -48,7 +48,7 @@ public class AuthController : ControllerBase
                 Id = user.Id,
                 Name = user.Name,
                 Email = user.Email,
-                StudentId =  user.Role == UserRole.STUDENT ?  user?.Student?.Id : null,
+                StudentId = user.Role == UserRole.STUDENT ? user?.Student?.Id : null,
                 Role = user.Role
             },
             status = 200,
@@ -88,7 +88,6 @@ public class AuthController : ControllerBase
         };
         return StatusCode(StatusCodes.Status201Created, response);
     }
-
 
     [HttpGet("users")]
     [Authorize(Roles = "ADMIN")]

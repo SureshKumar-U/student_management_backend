@@ -11,8 +11,6 @@ public class StudentResponseDto
     public DepartmentResponseDto? Department { get; set; }
 }
 
-
-
 public class DepartmentResponseDto
 {
     public Guid Id { get; set; }

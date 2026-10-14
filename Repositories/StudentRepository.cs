@@ -1,11 +1,9 @@
-
 using CrudAPi.Data;
 using CrudAPi.Dtos;
 using CrudAPi.Exceptions;
 using CrudAPi.Models;
 using Microsoft.EntityFrameworkCore;
 namespace CrudAPi.Repositories;
-
 
 public interface IStudentRepository
 {
@@ -76,7 +74,6 @@ public class StudentRepository : IStudentRepository
     public async Task DeleteStudentById(Guid studentId)
     {
         Student? student = await db.Students.FindAsync(studentId);
-
         if (student == null)
         {
             throw new NotFoundException($"Student not found with ${studentId}");
@@ -89,8 +86,6 @@ public class StudentRepository : IStudentRepository
         db.Students.Remove(student);
         await db.SaveChangesAsync();
     }
-
-
     public async Task<List<StudentResponseDto>> GetAllStudents()
     {
 
@@ -133,10 +128,8 @@ public class StudentRepository : IStudentRepository
             throw new NotFoundException(
                 $"Department not found with ID {updateStudentDto.DepartmentId.Value}");
         }
-
         user.Name = updateStudentDto.Name ?? user.Name;
         user.Email = updateStudentDto.Email ?? user.Email;
-
         Student student = user.Student ?? new Student
         {
             UserId = user.Id,
@@ -149,10 +142,8 @@ public class StudentRepository : IStudentRepository
         {
             await db.Students.AddAsync(student);
         }
-
         await db.SaveChangesAsync();
     }
-
     public async Task<List<Course>> GetCoursesByUserId(Guid userId)
     {
         var student = await db.Students
@@ -172,7 +163,6 @@ public class StudentRepository : IStudentRepository
 
     public async Task<List<Student>> GetRecentStudents()
     {
-
         var recentStudents = await db.Students
     .Include(s => s.User)
     .Include(s => s.Department)

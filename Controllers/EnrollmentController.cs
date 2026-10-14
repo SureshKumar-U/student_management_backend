@@ -1,20 +1,14 @@
 namespace CrudAPi.Controllers;
 
-using CrudAPi.common;
 using CrudAPi.Dtos;
 using CrudAPi.Services;
-using CrudAPi.Models;
-using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-
-
 
 [ApiController]
 [Route("api/v1/student_enrollment")]
 public class EnrollmentController : ControllerBase
 {
     private readonly IEnrollmentService _enrollmentService;
-
     public EnrollmentController(
         IEnrollmentService enrollmentService)
     {

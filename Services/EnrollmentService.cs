@@ -9,15 +9,13 @@ public interface IEnrollmentService
     Task EnrollStudentAsync(
         EnrollStudentRequest request);
 }
-
-
 public class EnrollmentService : IEnrollmentService
 {
-    private readonly IStudentRepository  _studentRepository;
+    private readonly IStudentRepository _studentRepository;
     private readonly ICourseRepository _courseRepository;
     private readonly IEnrollmentRepository _enrollmentRepository;
     public EnrollmentService(
-        IStudentRepository  studentRepository,
+        IStudentRepository studentRepository,
         ICourseRepository courseRepository,
         IEnrollmentRepository enrollmentRepository)
     {

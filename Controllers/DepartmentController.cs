@@ -7,7 +7,6 @@ using CrudAPi.Services;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
-
 [ApiController]
 [Route("api/v1/departments")]
 public class DepartmentController : ControllerBase

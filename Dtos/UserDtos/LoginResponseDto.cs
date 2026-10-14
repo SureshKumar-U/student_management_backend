@@ -1,7 +1,4 @@
-using CrudAPi.Models;
-
 namespace CrudAPi.Dtos;
-
 public class LoginResponseDto
 {
     public string Token { get; set; }
