@@ -10,7 +10,7 @@ public interface IStudentService
     Task<Student> GetStudentDashboard(Guid id);
     Task<StudentResponseDto> GetStudentById(Guid id);
     Task AddStudent(CreateStudentDto studentDto);
-    Task UpdateStudent(Guid id, UpdateStudentDto updateStudentDto);
+    Task UpdateStudent(Guid userId, UpdateStudentDto updateStudentDto);
     Task DeleteStudent(Guid id);
     Task<List<Course>> GetCoursesByUserId(Guid userId);
     Task<List<Student>> GetRecentStudents();
@@ -47,9 +47,9 @@ public class StudentService : IStudentService
     {
         return await _studentRepository.GetAllStudents();
     }
-    public async Task UpdateStudent(Guid id, UpdateStudentDto updateStudentDto)
+    public async Task UpdateStudent(Guid userId, UpdateStudentDto updateStudentDto)
     {
-        await _studentRepository.UpdateStudent(id, updateStudentDto);
+        await _studentRepository.UpdateStudent(userId, updateStudentDto);
     }
     public async Task DeleteStudent(Guid id)
     {
@@ -93,4 +93,6 @@ public class StudentService : IStudentService
     {
         return await _studentRepository.GetRecentStudents();
     }
+
+    
 }

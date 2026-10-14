@@ -15,7 +15,6 @@ public class StudentController : ControllerBase
     {
         _studentService = studentService;
     }
-
     [HttpGet]
     [Authorize(Roles = "ADMIN")]
     public async Task<IActionResult> GetAllStudents()
@@ -34,7 +33,6 @@ public class StudentController : ControllerBase
     [Authorize(Roles = "STUDENT,ADMIN")]
     public async Task<ActionResult<ApiResponse<Student>>> GetStudentDashboard(Guid id)
     {
-
         Student student = await _studentService.GetStudentDashboard(id);
         return Ok(new ApiResponse<Student>
         {
@@ -57,11 +55,11 @@ public class StudentController : ControllerBase
         });
     }
 
-    [HttpPut("{id}")]
+    [HttpPut("{userId}")]
     [Authorize(Roles = "STUDENT,ADMIN")]
-    public async Task<IActionResult> UpdateStudent(Guid id, UpdateStudentDto updateStudentDto)
+    public async Task<IActionResult> UpdateStudent(Guid userId, UpdateStudentDto updateStudentDto)
     {
-        await _studentService.UpdateStudent(id, updateStudentDto);
+        await _studentService.UpdateStudent(userId, updateStudentDto);
         return Ok(new ApiResponse<string>
         {
             message = "Student updated succesfully",

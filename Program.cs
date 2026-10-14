@@ -115,7 +115,6 @@ var app = builder.Build();
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())
 {
-    Console.WriteLine("developement............");
     app.UseSwagger();//create endpoint for swagger.json
     app.UseSwaggerUI(); //Generate Swagger UI
 }
