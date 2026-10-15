@@ -16,7 +16,7 @@ public interface IStudentRepository
     Task<List<StudentResponseDto>> GetAllStudents();
     Task UpdateStudent(Guid userId, UpdateStudentDto updateStudentDto);
     Task<List<Course>> GetCoursesByUserId(Guid userId);
-    Task<List<Student>> GetRecentStudents();
+    Task<List<StudentResponseDto>> GetRecentStudents();
 }
 
 public class StudentRepository : IStudentRepository
@@ -161,13 +161,28 @@ public class StudentRepository : IStudentRepository
         return courses;
     }
 
-    public async Task<List<Student>> GetRecentStudents()
+    public async Task<List<StudentResponseDto>> GetRecentStudents()
     {
-        var recentStudents = await db.Students
-    .Include(s => s.User)
-    .Include(s => s.Department)
+        var recentStudents = await db.Users
+        .Where(u => u.Role == UserRole.STUDENT)
     .OrderByDescending(s => s.CreatedAt)
-    .Take(10)
+    .Take(5)
+    .Select(u => new StudentResponseDto
+    {
+        UserId = u.Id,
+        Id = u.Student.Id,
+        Name = u.Name,
+        Email = u.Email,
+        Role = u.Role,
+        RollNumber = u.Student == null ? null : u.Student.RollNumber,
+        Department = u.Student == null || u.Student.Department == null
+            ? null
+            : new DepartmentResponseDto
+            {
+                Id = u.Student.Department.Id,
+                Name = u.Student.Department.Name
+            }
+    })
     .ToListAsync();
         return recentStudents;
     }

@@ -25,7 +25,6 @@ public class StudentController : ControllerBase
             message = "All studets fetched succesfully",
             status = 200,
             data = students,
-
         });
     }
 
@@ -109,11 +108,11 @@ public class StudentController : ControllerBase
     [HttpGet("recent")]
     public async Task<IActionResult> GetRecentStudents()
     {
-        var courses = await _studentService.GetRecentStudents();
+        var recentStudents = await _studentService.GetRecentStudents();
         return Ok(new
         {
             success = true,
-            data = courses
+            data = recentStudents
         });
     }
 }

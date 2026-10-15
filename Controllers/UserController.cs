@@ -1,3 +1,4 @@
+namespace CrudAPi.Controllers;
 using CrudAPi.common;
 using CrudAPi.Data;
 using CrudAPi.Exceptions;
@@ -7,7 +8,6 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using CrudAPi.Dtos;
 using Microsoft.AspNetCore.Authorization;
-namespace CrudAPi.Controllers;
 
 [ApiController]
 [Route("api/v1/auth")]
@@ -20,6 +20,7 @@ public class AuthController : ControllerBase
         db = dbcontext;
         _jwtService = jwtService;
     }
+    
 
     [HttpPost("login")]
     public async Task<IActionResult> Login(LoginUserDto loginUserDto)

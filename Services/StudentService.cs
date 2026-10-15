@@ -13,9 +13,8 @@ public interface IStudentService
     Task UpdateStudent(Guid userId, UpdateStudentDto updateStudentDto);
     Task DeleteStudent(Guid id);
     Task<List<Course>> GetCoursesByUserId(Guid userId);
-    Task<List<Student>> GetRecentStudents();
+    Task<List<StudentResponseDto>> GetRecentStudents();
 };
-
 
 
 public class StudentService : IStudentService
@@ -89,7 +88,7 @@ public class StudentService : IStudentService
     {
         return await _studentRepository.GetCoursesByUserId(userId);
     }
-    public async Task<List<Student>> GetRecentStudents()
+    public async Task<List<StudentResponseDto>> GetRecentStudents()
     {
         return await _studentRepository.GetRecentStudents();
     }   
