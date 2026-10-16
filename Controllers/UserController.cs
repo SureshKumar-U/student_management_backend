@@ -73,14 +73,6 @@ public class AuthController : ControllerBase
             Role = signUpUserDto.Role,
         };
         await db.Users.AddAsync(user);
-        if (signUpUserDto.Role == UserRole.STUDENT)
-        {
-            var student = new Student
-            {
-                UserId = user.Id
-            };
-            await db.Students.AddAsync(student);
-        }
         await db.SaveChangesAsync();
         var response = new ApiResponse<object>
         {
@@ -90,6 +82,8 @@ public class AuthController : ControllerBase
         return StatusCode(StatusCodes.Status201Created, response);
     }
 
+
+    
     [HttpGet("users")]
     [Authorize(Roles = "ADMIN")]
     public async Task<IActionResult> GetAllUsers()

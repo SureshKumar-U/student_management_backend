@@ -2,6 +2,7 @@ using CrudAPi.Data;
 using CrudAPi.Dtos;
 using CrudAPi.Exceptions;
 using CrudAPi.Models;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 namespace CrudAPi.Repositories;
 
@@ -13,10 +14,11 @@ public interface IStudentRepository
     Task<Student?> GetStudentDashboard(Guid userId);
     Task<StudentResponseDto?> GetStudentById(Guid userId);
     Task DeleteStudentById(Guid studentId);
-    Task<List<StudentResponseDto>> GetAllStudents();
+    Task<List<StudentResponseDto>> GetAllStudents(int page, int pageSize);
     Task UpdateStudent(Guid userId, UpdateStudentDto updateStudentDto);
     Task<List<Course>> GetCoursesByUserId(Guid userId);
     Task<List<StudentResponseDto>> GetRecentStudents();
+    Task<bool> HasStudentsInDepartment(Guid departmentId);
 }
 
 public class StudentRepository : IStudentRepository
@@ -86,11 +88,13 @@ public class StudentRepository : IStudentRepository
         db.Students.Remove(student);
         await db.SaveChangesAsync();
     }
-    public async Task<List<StudentResponseDto>> GetAllStudents()
+    public async Task<List<StudentResponseDto>> GetAllStudents(int page, int pageSize)
     {
-
         return await db.Users
             .Where(u => u.Role == UserRole.STUDENT)
+           .OrderByDescending(u => u.CreatedAt)
+            .Skip((page - 1) * pageSize)
+          .Take(pageSize)
             .Select(u => new StudentResponseDto
             {
                 UserId = u.Id,
@@ -185,5 +189,10 @@ public class StudentRepository : IStudentRepository
     })
     .ToListAsync();
         return recentStudents;
+    }
+
+    public Task<bool> HasStudentsInDepartment(Guid departmentId)
+    {
+        return db.Students.AnyAsync(s => s.DepartmentId == departmentId);
     }
 }

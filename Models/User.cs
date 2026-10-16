@@ -12,6 +12,6 @@ public class User
     public UserRole Role { get; set; }
     [JsonIgnore]
     public Student? Student { get; set; }
-    public Teacher? Teacher { get; set; }
+
 }
 

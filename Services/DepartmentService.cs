@@ -1,4 +1,5 @@
 namespace CrudAPi.Services;
+
 using CrudAPi.Dtos;
 using CrudAPi.Exceptions;
 using CrudAPi.Models;
@@ -15,7 +16,7 @@ public class DepartmentService : IDepartmentService
 {
     private readonly IDepartmentRepository departmentRepository;
     public readonly IStudentRepository studentRepository;
-    public DepartmentService(IDepartmentRepository departmentRepo, IStudentRepository  studentRepo)
+    public DepartmentService(IDepartmentRepository departmentRepo, IStudentRepository studentRepo)
     {
         departmentRepository = departmentRepo;
         studentRepository = studentRepo;
@@ -62,16 +63,12 @@ public class DepartmentService : IDepartmentService
     {
         Department? department = await departmentRepository.GetDepartmentById(id);
         if (department == null) throw new NotFoundException($"Departement Not Found with id ${id}");
-        var AllStudents = await studentRepository.GetAllStudents();
-        var studentsInDepartment = AllStudents
-       .Where(s => s != null &&  s.Department != null && s.Department.Id == department?.Id)
-        .ToList();
-        if (studentsInDepartment.Any())
+        if (await studentRepository.HasStudentsInDepartment(department.Id))
         {
             throw new UserAlreadyExistsException(
                 "Cannot delete department because students are assigned to it."
             );
-        };
+        }
         await departmentRepository.DeleteDepartment(department);
     }
 }

@@ -12,6 +12,5 @@ public class Course
     [JsonIgnore]
     public ICollection<Enrollment> Enrollments { get; set; }
         = new List<Enrollment>();
-    public ICollection<Teacher> Teachers { get; set; }
-        = new List<Teacher>();
+
 }

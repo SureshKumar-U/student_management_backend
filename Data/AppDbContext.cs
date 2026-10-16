@@ -9,7 +9,6 @@ public class AppDbContext:DbContext{
         // This creates a table named "Students" in your database
         public DbSet<User> Users => Set<User>();
         public DbSet<Student> Students => Set<Student>();
-        public DbSet<Teacher> Teachers => Set<Teacher>();
         public DbSet<Course> Courses => Set<Course>();
 
         public DbSet<Enrollment> Enrollments => Set<Enrollment>();

@@ -6,7 +6,7 @@ using CrudAPi.Exceptions;
 
 public interface IStudentService
 {
-    Task<List<StudentResponseDto>> GetAllStudents();
+    Task<List<StudentResponseDto>> GetAllStudents(int page, int pageSize);
     Task<Student> GetStudentDashboard(Guid id);
     Task<StudentResponseDto> GetStudentById(Guid id);
     Task AddStudent(CreateStudentDto studentDto);
@@ -42,9 +42,9 @@ public class StudentService : IStudentService
         }
         return student;
     }
-    public async Task<List<StudentResponseDto>> GetAllStudents()
+    public async Task<List<StudentResponseDto>> GetAllStudents(int page, int pageSize)
     {
-        return await _studentRepository.GetAllStudents();
+        return await _studentRepository.GetAllStudents(page,pageSize);
     }
     public async Task UpdateStudent(Guid userId, UpdateStudentDto updateStudentDto)
     {

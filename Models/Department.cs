@@ -10,9 +10,7 @@ public class Department
   [JsonIgnore]
   public ICollection<Student> Students { get; set; }
       = new List<Student>();
-  [JsonIgnore]
-  public ICollection<Teacher> Teachers { get; set; }
-    = new List<Teacher>();
+  
   [JsonIgnore]
   public ICollection<Course> Courses { get; set; }
     = new List<Course>();
