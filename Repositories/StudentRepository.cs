@@ -14,7 +14,7 @@ public interface IStudentRepository
     Task<Student?> GetStudentDashboard(Guid userId);
     Task<StudentResponseDto?> GetStudentById(Guid userId);
     Task DeleteStudentById(Guid studentId);
-    Task<List<StudentResponseDto>> GetAllStudents(int page, int pageSize);
+    Task<List<StudentResponseDto>> GetAllStudents(int pageNo, int pageSize);
     Task UpdateStudent(Guid userId, UpdateStudentDto updateStudentDto);
     Task<List<Course>> GetCoursesByUserId(Guid userId);
     Task<List<StudentResponseDto>> GetRecentStudents();
@@ -88,13 +88,14 @@ public class StudentRepository : IStudentRepository
         db.Students.Remove(student);
         await db.SaveChangesAsync();
     }
-    public async Task<List<StudentResponseDto>> GetAllStudents(int page, int pageSize)
+    public async Task<List<StudentResponseDto>> GetAllStudents(int pageNo, int pageSize)
     {
         return await db.Users
             .Where(u => u.Role == UserRole.STUDENT)
-           .OrderByDescending(u => u.CreatedAt)
-            .Skip((page - 1) * pageSize)
-          .Take(pageSize)
+            .OrderByDescending(u => u.CreatedAt)
+            .ThenBy(u => u.Id)
+            .Skip((pageNo - 1) * pageSize)
+            .Take(pageSize)
             .Select(u => new StudentResponseDto
             {
                 UserId = u.Id,

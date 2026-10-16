@@ -18,14 +18,14 @@ public class StudentController : ControllerBase
     [HttpGet]
     [Authorize(Roles = "ADMIN")]
     public async Task<IActionResult> GetAllStudents(
-        [FromQuery] int page = 1,
+        [FromQuery] int pageNo = 1,
         [FromQuery] int pageSize = 5
     )
     {
-        List<StudentResponseDto> students = await _studentService.GetAllStudents(page,pageSize);
+        List<StudentResponseDto> students = await _studentService.GetAllStudents(pageNo, pageSize);
         return Ok(new ApiResponse<List<StudentResponseDto>>
         {
-            message = "All studets fetched succesfully",
+            message = "All students fetched succesfully",
             status = 200,
             data = students,
         });
